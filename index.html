@@ -1,107 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>버추얼 인플루언서 게임</title>
-  <style>
-    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
-    button { margin-top: 10px; }
-    .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 16px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Influencer Game</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>버추얼 인플루언서 게임</h1>
-  <p><strong>계정명:</strong> <input id="usernameInput" /></p>
-  <p><strong>팔로워 수:</strong> <span id="followers">0</span></p>
-  <p><strong>보유 코인:</strong> <span id="coins">1000</span>원</p>
-
-  <div class="card">
-    <input id="postInput" placeholder="게시물 작성..." />
-    <button onclick="makePost()">게시</button>
-    <div id="posts"></div>
+  <div class="game-container">
+    <h1>Influencer Game</h1>
+    <div id="posts-container"></div>
+    <div id="quests-container"></div>
   </div>
-
-  <div class="card">
-    <button onclick="getBrandDeal()">브랜드 협업 받기</button>
-    <div id="brandDeals"></div>
-  </div>
-
-  <div class="card">
-    <button onclick="triggerCrisis()">위기 발생</button>
-    <p id="crisisText" style="color: red;"></p>
-  </div>
-
-  <script>
-    let followers = 0;
-    let coins = 1000;
-    let posts = [];
-    let brandDeals = [];
-
-    setInterval(() => {
-      followers += Math.floor(Math.random() * 10);
-      document.getElementById("followers").textContent = followers;
-    }, 3000);
-
-    function makePost() {
-      const content = document.getElementById("postInput").value;
-      if (!content.trim()) return;
-      const postHTML = `<div><strong>📸 ${content}</strong><br/>❤️ 좋아요 ${Math.floor(Math.random() * 100)}개</div>`;
-      document.getElementById("posts").innerHTML = postHTML + document.getElementById("posts").innerHTML;
-      document.getElementById("postInput").value = "";
-    }
-
-    function getBrandDeal() {
-      const brands = ["스타벅스", "나이키", "구글"];
-      const selected = brands[Math.floor(Math.random() * brands.length)];
-      const payment = Math.floor(Math.random() * 500) + 100;
-      coins += payment;
-      document.getElementById("coins").textContent = coins;
-      const dealHTML = `<div>📢 ${selected} 브랜드와 협업! 💰 ${payment}원 지급</div>`;
-      document.getElementById("brandDeals").innerHTML = dealHTML + document.getElementById("brandDeals").innerHTML;
-    }
-
-    function triggerCrisis() {
-      const events = ["가짜 뉴스 발생!", "논란 게시물 발견!", "악성 댓글 공격!"];
-      const selected = events[Math.floor(Math.random() * events.length)];
-      document.getElementById("crisisText").textContent = "⚠ " + selected;
-    }
-  </script>
+  
+  <script src="app.js"></script>
 </body>
 </html>
-import { Card, CardContent } from "reactstrap"; // reactstrap을 사용할 경우
-import { Button } from "reactstrap"; // reactstrap 버튼
-import { Input } from "reactstrap"; // reactstrap Input
-
-.fade-in {
-  animation: fadeIn 1s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-body {
-  background-image: url('https://via.placeholder.com/1920x1080.png?text=Background');
-  background-size: cover;
-  background-position: center;
-  font-family: 'Arial', sans-serif;
-}
-
-.game-container {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.post-card {
-  transition: transform 0.3s ease;
-}
-
-.post-card:hover {
-  transform: scale(1.05);
-}
