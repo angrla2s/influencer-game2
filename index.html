@@ -1,18 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Influencer Game</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>버추얼 인플루언서 게임</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background-image: url('background-image.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .post {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      animation: fadeIn 1s ease-in forwards;
+    }
+
+    .post img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .post-content {
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .quest {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+    }
+
+    .quest button {
+      background-color: #32cd32;
+    }
+
+    .quest button:hover {
+      background-color: #228b22;
+    }
+  </style>
 </head>
 <body>
-  <div class="game-container">
-    <h1>Influencer Game</h1>
-    <div id="posts-container"></div>
-    <div id="quests-container"></div>
-  </div>
-  
-  <script src="app.js"></script>
+  <h1>📸 버추얼 인플루언서 게임</h1>
+
+  <!-- 사용자 정보 -->
+  <label>SNS 계정명: <input id="usernameInput" /></label>
+  <p>팔로워 수: <span id="followerCount">0</span></p>
+
+  <hr />
+
+  <!-- 게시물 입력 -->
+  <textarea id="postInput" placeholder="게시물 내용을 입력하세요..." rows="4" cols="50"></textarea><br />
+  <button onclick="createPost()">게시하기</button>
+
+  <h2>게시물</h2>
+  <div id="postList"></div>
+
+  <h2>퀘스트</h2>
+  <div id="questsContainer"></div>
+
+  <script>
+    let followers = 0;
+    let posts = [];
+    let quests = [
+      { id: 1, name: '게시물 작성', completed: false },
+      { id: 2, name: '100개 좋아요 얻기', completed: false }
+    ];
+
+    // 팔로워 수 자동 증가
+    setInterval(() => {
+      followers += Math.floor(Math.random() * 10);
+      document.getElementById("followerCount").textContent = followers;
+    }, 3000);
+
+    // 게시물 생성
+    function createPost() {
+      const content = document.getElementById("postInput").value.trim();
+      if (!content) return;
+      const post = {
+        content: content,
+        likes: Math.floor(Math.random() * 100),
+        comments: ["멋져요!", "좋아요!", "다음 포스트 기대해요!"],
+        profileImage: 'profile-placeholder.jpg'  // 기본 프로필 이미지
+      };
+      posts.unshift(post);
+      updatePostList();
+      document.getElementById("postInput").value = "";
+    }
+
+    // 게시물 목록 업데이트
+    function updatePostList() {
+      const list = document.getElementById("postList");
+      list.innerHTML = "";
+      posts.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <div class="post-header">
+            <img src="${post.profileImage}" alt="User Profile">
+            <span>버추얼 인플루언서</span>
+            <span>${post.likes} ❤️</span>
+          </div>
+          <div class="post-content">
+            <p>${post.content}</p>
+            <p>💬 댓글: ${post.comments.join(" / ")}</p>
+            <button onclick="likePost(${posts.indexOf(post)})">좋아요</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // 좋아요 버튼 클릭 시 좋아요 수 증가
+    function likePost(index) {
+      posts[index].likes += 1;
+      updatePostList();
+    }
+
+    // 퀘스트 완료 함수
+    function completeQuest(questId) {
+      const quest = quests.find(q => q.id === questId);
+      if (quest) {
+        quest.completed = true;
+        renderQuests();
+      }
+    }
+
+    // 퀘스트 렌더링 함수
+    function renderQuests() {
+      const questsContainer = document.getElementById('questsContainer');
+      questsContainer.innerHTML = ''; // 기존 퀘스트 내용 제거
+      
+      quests.forEach(quest => {
+        const questElement = document.createElement('div');
+        questElement.classList.add('quest');
+        
+        questElement.innerHTML = `
+          <p>${quest.name} ${quest.completed ? '✔️' : ''}</p>
+          ${!quest.completed ? `<button onclick="completeQuest(${quest.id})">완료</button>` : ''}
+        `;
+        
+        questsContainer.appendChild(questElement);
+      });
+    }
+
+    // 초기화 함수
+    function init() {
+      renderQuests();
+      updatePostList();
+    }
+
+    // 페이지 로드 시 초기화
+    window.onload = init;
+  </script>
 </body>
 </html>
