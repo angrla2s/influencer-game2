@@ -68,3 +68,78 @@
   </script>
 </body>
 </html>
+import { Card, CardContent } from "reactstrap"; // reactstrap을 사용할 경우
+import { Button } from "reactstrap"; // reactstrap 버튼
+import { Input } from "reactstrap"; // reactstrap Input
+
+// 프로필 이미지 원형으로 바꾸기
+<Card>
+  <img src={profileImage} alt="Profile" className="rounded-circle" width={150} height={150} />
+</Card>
+
+// 게시물의 댓글과 좋아요 수를 직관적으로 더 강조
+<Card>
+  <CardContent>
+    <p>{post.content}</p>
+    <div className="d-flex justify-content-between">
+      <p>❤️ {post.likes} likes</p>
+      <Button size="sm" color="primary">💬 댓글</Button>
+    </div>
+    <div>
+      {post.comments.map((comment, index) => (
+        <p key={index}>💬 {comment}</p>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+<Button 
+  style={{ position: 'fixed', bottom: '20px', right: '20px' }}
+  onClick={handlePost}
+>
+  게시물 작성
+</Button>
+<Card className="fade-in">
+  <CardContent>
+    <p>{post.content}</p>
+    <p className="text-sm text-gray-500">❤️ {post.likes}개</p>
+  </CardContent>
+</Card>
+fade-in 효과를 적용하려면 CSS에서 애니메이션을 추가해야 합니다:
+
+css
+복사
+편집
+.fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+body {
+  background-image: url('background-image.jpg');
+  background-size: cover;
+  background-position: center;
+}
+<Card className="mb-4 p-4">
+  <h2 className="font-bold">퀘스트</h2>
+  {quests.map((quest) => (
+    <div key={quest.id} className="d-flex justify-content-between align-items-center">
+      <p>{quest.name} {quest.completed && "✔️"}</p>
+      {!quest.completed && <Button onClick={() => completeQuest(quest.id)}>완료</Button>}
+    </div>
+  ))}
+</Card>
+@media (max-width: 768px) {
+  .game-container {
+    padding: 10px;
+  }
+  .post-card {
+    font-size: 14px;
+  }
+}
